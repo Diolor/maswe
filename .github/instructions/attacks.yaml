@@ -88,3 +88,4 @@ MAS-ATTACK-0087: Exporting or sharing data through flows whose privacy consequen
 MAS-ATTACK-0088: Holding excessive or no-longer-needed permissions granted to the app.
 MAS-ATTACK-0089: Using permissions granted to the host app to call protected APIs and collect data from a third-party SDK.
 MAS-ATTACK-0090: Forging a MAC or tag by exploiting non-constant-time verification or distinguishable error responses.  
+MAS-ATTACK-0091: Copying the app's public identifiers, such as package name, signing-certificate digest, or bundle identifier, into requests sent from another client.

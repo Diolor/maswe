@@ -76,3 +76,4 @@ MAS-THREAT-0075: Apps can include code that is different from the audited source
 MAS-THREAT-0076: Apps and their backend services can retain and process personal data beyond the user's control.
 MAS-THREAT-0077: Apps and their users' counterparts can expose personal information beyond the user's intent.
 MAS-THREAT-0078: Apps and embedded third-party components can process personal data without valid user consent.
+MAS-THREAT-0079: Attackers can use the app's shared keys to incur costs, corrupt data, disrupt service, or access data.

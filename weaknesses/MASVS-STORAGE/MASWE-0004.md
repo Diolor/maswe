@@ -34,7 +34,6 @@ Note that developer _debug_ artifacts (verbose logging, backdoors, testing utili
 - **App Assets and Resources**: Including secrets in configuration files, manifests, property lists, string resources, and other bundled files.
 - **Libraries**: Including secrets in the configuration files or source code of first-party, third-party, or transitive dependencies.
 - **Build and Developer Leftovers**: Inadvertently packaging staging/integration endpoints, developer identities, and source files with the app.
-- **Keys That Cannot Be Rotated**: Shipping a key in the package so that replacing it requires an app update.
 
 ## Impact
 

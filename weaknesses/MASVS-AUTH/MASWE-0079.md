@@ -6,15 +6,14 @@ requirement: "The app only holds shared keys that cannot be used by others to in
 platform: [android, ios]
 profiles: [L1, L2]
 threat: MAS-THREAT-0079
-attacks: [MAS-ATTACK-0001, MAS-ATTACK-0003, MAS-ATTACK-0068, MAS-ATTACK-0091]
+attacks: [MAS-ATTACK-0001, MAS-ATTACK-0003, MAS-ATTACK-0064, MAS-ATTACK-0068, MAS-ATTACK-0091]
 mappings:
   masvs-v1: [MSTG-AUTH-1]
   masvs-v2: [MASVS-AUTH-1]
-  cwe: [269, 290, 798]
+  cwe: [269, 290, 306]
 refs:
 - https://cloud.google.com/docs/authentication/api-keys#api_key_restrictions
 - https://github.com/firebase/firebase-android-sdk/issues/1583
-- https://blog.dixitaditya.com/bypassing-google-maps-api-key-restrictions
 - https://www.cloudsek.com/blog/hardcoded-google-api-keys-in-top-android-apps-now-expose-gemini-ai
 - https://firebase.google.com/docs/app-check
 status: new

@@ -41,8 +41,9 @@ The weakness is therefore not that the key can be obtained, but that the key all
 
 ## Impact
 
-- **Financial Loss**: Attackers can send billed requests under the app's key, resulting in unexpected charges to the app owner or quotas reserved for it.
+- **Financial Loss**: Attackers can send billed requests under the app's key, resulting in unexpected charges to the app owner.
 - **Compromise of System Integrity and Business Operations**: Attackers can inject fake events or records, write content that the app later shows to its users, or exhaust the key's quotas, resulting in polluted data, unwanted content reaching users, and service disruption for every installation at once.
+- **Compromise of Sensitive Data**: Attackers can read the data the key unlocks, resulting in unauthorized disclosure of user or app data.
 - **Authentication or Authorization Bypass**: Attackers can present the key and the app's public identifiers from their own client to pass checks meant to admit only the genuine app, resulting in unauthorized access to functionality.
 
 ## Mitigations

@@ -38,6 +38,7 @@ Note that developer _debug_ artifacts (verbose logging, backdoors, testing utili
 ## Impact
 
 - **Financial Loss**: Attackers can use extracted keys and credentials against the services they unlock (see @MASWE-0079), resulting in unexpected charges to the app owner.
+- **Compromise of System Integrity and Business Operations**: Attackers can use extracted credentials to access backend services, resulting in service disruption, policy-violation suspensions, or denial of service.
 - **Compromise of Sensitive Data**: Attackers can use extracted cryptographic material to decrypt protected data, resulting in unauthorized disclosure of user or app data.
 - **Bypass of Protection Mechanisms**: Attackers can use hardcoded keys to unlock paid features or access restricted content, resulting in circumvention of the protections the app enforces.
 

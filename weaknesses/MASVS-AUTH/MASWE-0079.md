@@ -25,16 +25,16 @@ status: new
 
 ## Overview
 
-This weakness occurs when the app holds a client key, that is an API key, access token, or similar credential that every installation shares, which alone or together with the service's access rules allows operations that cause harm when performed by anyone, such as billed calls, writes to the app owner's data, or reads of protected data.
+This weakness occurs when the app holds a client key (an API key, access token, or similar credential shared by every installation) that, alone or combined with the service's access rules, allows operations that cause harm when anyone performs them, such as billed calls, writes to the app owner's data, or reads of protected data.
 
-Many services issue client keys that are meant to be used from apps, such as API keys for maps, AI/ML, analytics, or backend-as-a-service platforms, often placed in SDK configuration files. Because the same key is present in every installation, it is only as protected as the least protected device that holds it. Keys in the app package can be extracted from it (see @MASWE-0004), and keys delivered at runtime, for example through remote configuration or from a backend after attestation, can be read from memory or traffic on a device the attacker controls, because attestation shows that a request comes from a genuine app instance but does not stop the owner of that device from inspecting it. Services often let the key be restricted to identifiers the app sends with the request, such as package name, signing-certificate digest, or bundle identifier. These identifiers are public and any client can send them, so such restrictions do not prevent other clients from using the key.
+Many services issue client keys that are meant to be used from apps, such as API keys for maps, analytics, crash reporting, or backend-as-a-service platforms, often placed in SDK configuration files. Because the same key is present in every installation, it is only as protected as the least protected device that holds it. Keys in the app package can be extracted from it (see @MASWE-0004), and keys delivered at runtime, for example through remote configuration or from a backend after attestation, can be read from memory or traffic on a device the attacker controls, because attestation shows that a request comes from a genuine app instance but does not stop the owner of that device from inspecting it. Services often let the key be restricted to identifiers the app sends with the request, such as package name, signing-certificate digest, or bundle identifier. These identifiers are public and any client can send them, so such restrictions do not prevent other clients from using the key.
 
 The weakness is therefore not that the key can be obtained, which is covered by @MASWE-0004, but that the key allows harmful operations once obtained. It does not cover client keys that only serve generic identification, for example telling Android and iOS builds apart, routing requests, or attributing usage per platform, as long as no security decision depends on them.
 
 ## Modes of Introduction
 
 - **Over-Privileged Client Keys**: Giving the app a key, or configuring the service behind it, so that anyone holding the key can perform billed, write, or read operations that the app owner intends only for authenticated users or its own backend.
-- **Broad Key Scope**: Issuing the app's key from a project or account that also has other APIs enabled, so that the key extends to them.
+- **Broad Key Scope**: Issuing the app's key without limiting it to the APIs the app needs, so that it reaches every API enabled on the same project or account, including APIs enabled after the key shipped.
 - **Runtime-Delivered Client Keys**: Delivering the same key to every installation at runtime, for example through remote configuration or after attestation, instead of issuing per-installation credentials.
 - **Client Keys in Third-Party SDKs**: Integrating SDKs whose service calls are authorized only by a static key from the app's configuration files, without enabling the server-verified app checks the service offers.
 - **Security Decisions Based on a Client Key**: Granting access, trust, or higher limits to requests because they carry the client key or pass restrictions based on identifiers the app declares.
@@ -42,8 +42,9 @@ The weakness is therefore not that the key can be obtained, which is covered by 
 ## Impact
 
 - **Financial Loss**: Attackers can send billed requests (e.g., maps or AI/ML services) under the app's key, resulting in unexpected charges to the app owner.
-- **Compromise of System Integrity and Business Operations**: Attackers can inject fake events, records, or reports, write content that the app later shows to its users, or exhaust the quotas of billed or rate-limited operations and trigger abuse suspensions on the key, resulting in polluted data, unwanted content reaching users, and service disruption for every installation at once.
+- **Compromise of System Integrity and Business Operations**: Attackers can inject fake events or records, write content that the app later shows to its users, or exhaust the key's quotas, resulting in polluted data, unwanted content reaching users, and service disruption for every installation at once.
 - **Compromise of Sensitive Data**: Attackers can read the data the key unlocks, such as database records, stored files, or search indexes, resulting in unauthorized disclosure of user or app data.
+- **Authentication or Authorization Bypass**: Attackers can present the key and the app's public identifiers from their own client to pass checks meant to admit only the genuine app, resulting in unauthorized access to functionality or quotas reserved for it.
 
 ## Mitigations
 

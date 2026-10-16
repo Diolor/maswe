@@ -29,26 +29,25 @@ This weakness occurs when the app holds a client key (an API key, access token, 
 
 Many services issue client keys that are meant to be used from apps, such as API keys for maps, analytics, crash reporting, or backend-as-a-service platforms, often placed in SDK configuration files. Because the same key is present in every installation, it is only as protected as the least protected device that holds it. Keys in the app package can be extracted from it (see @MASWE-0004). Keys the app receives at runtime, for example through remote configuration or from a backend after attestation, can be read from memory or traffic on a device the attacker controls. Attestation shows that a request comes from a genuine app instance, but it does not stop the owner of that device from inspecting it. Services often let the key be restricted to identifiers the app sends with the request, such as package name, signing-certificate digest, or bundle identifier. These identifiers are public and any client can send them, so such restrictions do not prevent other clients from using the key.
 
-The weakness is therefore not that the key can be obtained, which is covered by @MASWE-0004, but that the key allows harmful operations once obtained. It does not cover client keys that only serve generic identification, for example telling Android and iOS builds apart, routing requests, or attributing usage per platform, as long as no security decision depends on them.
+The weakness is therefore not that the key can be obtained, but that the key allows harmful operations once obtained. It does not cover client keys that only serve generic identification, for example telling Android and iOS builds apart, routing requests, or attributing usage per platform, as long as no security decision depends on them.
 
 ## Modes of Introduction
 
 - **Over-Privileged Client Keys**: Giving the app a key, or configuring the service behind it, so that anyone holding the key can perform billed, write, or read operations that the app owner intends only for authenticated users or its own backend.
 - **Broad Key Scope**: Issuing the app's key without limiting it to the APIs the app needs, so that it reaches every API enabled on the same project or account, including APIs enabled after the key shipped.
 - **Runtime-Delivered Client Keys**: Delivering the same key to every installation at runtime, for example through remote configuration or after attestation, instead of issuing per-installation credentials.
-- **Client Keys in Third-Party SDKs**: Integrating SDKs whose service calls are authorized only by a static key from the app's configuration files, without enabling the server-verified app checks the service offers.
+- **Client Keys in Third-Party SDKs**: Integrating SDKs whose service calls are authorized only by a static key from the app's configuration files.
 - **Security Decisions Based on a Client Key**: Granting access, trust, or higher limits to requests because they carry the client key or pass restrictions based on identifiers the app declares.
 
 ## Impact
 
-- **Financial Loss**: Attackers can send billed requests (e.g., maps or AI/ML services) under the app's key, resulting in unexpected charges to the app owner.
+- **Financial Loss**: Attackers can send billed requests under the app's key, resulting in unexpected charges to the app owner or quotas reserved for it.
 - **Compromise of System Integrity and Business Operations**: Attackers can inject fake events or records, write content that the app later shows to its users, or exhaust the key's quotas, resulting in polluted data, unwanted content reaching users, and service disruption for every installation at once.
-- **Compromise of Sensitive Data**: Attackers can read the data the key unlocks, such as database records, stored files, or search indexes, resulting in unauthorized disclosure of user or app data.
-- **Authentication or Authorization Bypass**: Attackers can present the key and the app's public identifiers from their own client to pass checks meant to admit only the genuine app, resulting in unauthorized access to functionality or quotas reserved for it.
+- **Authentication or Authorization Bypass**: Attackers can present the key and the app's public identifiers from their own client to pass checks meant to admit only the genuine app, resulting in unauthorized access to functionality.
 
 ## Mitigations
 
 - **Keep Privileged Keys on a Backend**: Ensure every client key the app holds, whether packaged or delivered at runtime, allows only operations that are harmless when anyone performs them, and route any other operation through a backend that holds the key.
 - **Restrict Key Scope**: Limit each key to the APIs the app needs, and issue keys the app holds from a separate project or account so that enabling new APIs does not extend them.
-- **Issue Per-Installation Credentials**: Replace client keys with short-lived credentials bound to a single installation, for example to a key generated in the platform keystore (see @MASWE-0003), so that a leaked credential can be revoked for that installation alone.
+- **Issue Per-Installation Credentials**: Replace shared client keys with short-lived credentials issued to one installation after server-verified attestation (see @MASWE-0056) and bound to a key in the platform keystore (see @MASWE-0003). Because the attacker's own installation still receives a valid credential, enforce per-installation quotas and rate limits on the backend and revoke the credential on abuse.
 - **Do Not Trust Requests Because They Carry the Key**: Use server-verified app attestation (see @MASWE-0056) rather than the client key or app-declared identifiers to decide which clients receive access, trust, or higher limits, and enable the equivalent app checks offered by third-party services.
